@@ -69,19 +69,18 @@ public class cgShape extends simpleShape
 	    
 	    
 	    
-	  
-/*	    for(int cur_subdivision = 0; cur_subdivision < subdivisions;cur_subdivision++)
+	   //FRONT AND BACK
+	    for(int cur_subdivision = 0; cur_subdivision < subdivisions;cur_subdivision++)
 	    {
 	    	cur_y= 0.5f;
 	    	for(int cur_sub_y =0; cur_sub_y < subdivisions;cur_sub_y++)
 	    	{
-       	    	//Draw top left
+      	    	//Draw top left
 		    	this.addTriangle(
 		    			cur_x, cur_y, 0.5f,
 		    			cur_x , cur_y - triangle_increment,0.5f,
 		    			cur_x + triangle_increment, cur_y, 0.5f
 		    			);
-		    	
 		    	
 		    	//Draw bottom right
 		    	this.addTriangle(
@@ -127,6 +126,7 @@ public class cgShape extends simpleShape
 	    	cur_y= 0.5f;
 	    	for(int cur_sub_y = 0; cur_sub_y < subdivisions;cur_sub_y++)
 	 	    {
+	    		
 		    	//Draw top left
 		    	this.addTriangle(
 		    			.5f , cur_y, cur_z + triangle_increment,
@@ -137,9 +137,10 @@ public class cgShape extends simpleShape
 		    	
 		    	//Draw bottom right
 		    	this.addTriangle(
+		    			.5f, cur_y, cur_z + triangle_increment,
 		    			.5f,cur_y - triangle_increment,cur_z,
-		    			.5f, cur_y - triangle_increment, cur_z + triangle_increment,
-		    			.5f, cur_y, cur_z + triangle_increment
+		    			.5f, cur_y - triangle_increment, cur_z + triangle_increment
+		    			
 		    			
 		    			
 		    		);
@@ -171,17 +172,14 @@ public class cgShape extends simpleShape
 	    	
 	    	cur_z = cur_z + triangle_increment;
     	
-	    }*/
-
-	    
-	    
+	    }
 	    
 	     cur_x = -.5f;
 	     cur_y= 0.5f;
 	     cur_z = -.5f;
 	    
 	    
-	    //left and right
+	    //top and bot
 	    for(int cur_sub_x =0; cur_sub_x < subdivisions;cur_sub_x++)
 	    {
 	    	 cur_z = -.5f;
@@ -205,8 +203,6 @@ public class cgShape extends simpleShape
 		    		
 		    		);
 		    	
-		    
-		    	
 		    	//Draw top left
 		    	this.addTriangle(
 		    			cur_x + triangle_increment ,- 0.5f, cur_z + triangle_increment,
@@ -224,19 +220,13 @@ public class cgShape extends simpleShape
 
 		    		
 		    		);
-		    	
-		    
-		    	
-		    	
-		    	
-		    	
+		    		
 		    	cur_z = cur_z  + triangle_increment;
 	 	    }
 	    	
 	    	cur_x = cur_x + triangle_increment;
-    	
 	    }
-	    
+	   
 	    
 	  //  this.addTriangle(.9f, .1f, .1f, .1f, .1f, .1f, 9f, 0, 1);
         

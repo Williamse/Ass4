@@ -54,20 +54,21 @@ public class simpleShape
         points.add (new Float(1.0f));
         elements.add (new Short(nVerts));
         nVerts++;
-
+        System.out.println("First: [ " +x0 + " , " + y0 +" , " + z0 +  " ]");
         points.add (new Float(x1));
         points.add (new Float(y1));
         points.add (new Float(z1));
         points.add (new Float(1.0f));
         elements.add (new Short(nVerts));
         nVerts++;
-
+        System.out.println("Second: [ " +x1 + " , " + y1 +" , " + z1 +  " ]");
         points.add (new Float(x2));
         points.add (new Float(y2));
         points.add (new Float(z2));
         points.add (new Float(1.0f));
         elements.add (new Short(nVerts));
         nVerts++;
+        System.out.println("Third: [ " +x2 + " , " + y2 +" , " + z2 +  " ]");
     }
 
     /**

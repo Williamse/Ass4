@@ -369,78 +369,57 @@ public class cgShape extends simpleShape
        ArrayList<float[]> pointsTopFirst = null;
        for(int hdiv = 0; hdiv < heightDivisions;hdiv++)
        {
-    	   //Special case for bottom of cone
+    	   //Special case used for the bottom of the cone
     	   if(hdiv ==0)
     	   {
-    		   
     		   pointsTopFirst = pointOnCircle(cur_rad,degrees_between );
     	   }
+    	   
+    	   //Points for the next slice
     	   pointsTop = pointOnCircle(cur_rad - increment_rad ,degrees_between);
     	   
 	       //Loop through 360 degrees starting at zero
-    	   
-    	   
 	       for(int x= 0; x < pointsTop.size(); x++ )
 	       {
-	    	    
 		       	float[] cur = pointsTop.get(x);
 		       	float[] next = (x == pointsTop.size() - 1) ? pointsTop.get(0) : pointsTop.get(x + 1);
 		       	
+		       	float[] dependCur;
+		       	float[] dependNext;
+		       	
 		       	if(hdiv != 0)
 		       	{
-			       	float[] oldCur;
-			       	float[] oldNext;
-			       	
-		       		oldCur  = oldPoints.get(x);
-		       		oldNext = (x == oldPoints.size() - 1) ? oldPoints.get(0) : oldPoints.get(x + 1);
-		       		
-		       		//Use old values for points going up the cone
-			        this.addTriangle(oldCur[0],oldCur[1],cur_z,oldNext[0],oldNext[1],cur_z,cur[0],cur[1],cur_z + increment_z);
-			        this.addTriangle(oldNext[0],oldNext[1],cur_z,next[0],next[1],cur_z + increment_z,cur[0],cur[1],cur_z + increment_z);
-			      	
+		       		dependCur  = oldPoints.get(x);
+		       		dependNext = (x == oldPoints.size() - 1) ? oldPoints.get(0) : oldPoints.get(x + 1); 	
 		       	}
 		       	else
 		       	{
 
 		       		//Special case bottom
-		       		float[] first_cur = pointsTopFirst.get(x); 
-		       		float[] first_next  =  (x == pointsTopFirst.size() - 1) ? pointsTopFirst.get(0) : pointsTopFirst.get(x + 1);
+		       		dependCur = pointsTopFirst.get(x); 
+		       		dependNext =  (x == pointsTopFirst.size() - 1) ? pointsTopFirst.get(0) : pointsTopFirst.get(x + 1);
 		       		
 		       		//Bottom
-		       		this.addTriangle(first_cur[0],first_cur[1],-.5f,0, 0, -0.5f,first_next[0], first_next[1], -.5f);
-		       		
-
-		       		//if(heightDivisions == 1)
-		       		//{
-				  //      this.addTriangle(cur[0],cur[1],cur_z,next[0],next[1],cur_z,0,0,0);
-				  //      this.addTriangle(next[0],next[1],cur_z,0,0,0,0,0,0);
-		       		//}
-		       	//	else
-		       	//	{
-		       		//	pointsTop.set(x,first_cur);
-		       		//	int next_index = (x == pointsTopFirst.size() - 1) ? 0 : x + 1;
-		       		//	pointsTop.set(next_index, first_next);
-		       			
-		       			//first_cur = cur;
-		       			//first_next  = next;
-		       			
-				        this.addTriangle(first_cur[0],first_cur[1],cur_z,first_next[0],first_next[1],cur_z,cur[0],cur[1],cur_z + increment_z);
-				        this.addTriangle(first_next[0],first_next[1],cur_z,next[0],next[1],cur_z + increment_z,cur[0],cur[1],cur_z + increment_z);
-		       		//}
-			      	
+		       		this.addTriangle(dependCur[0],dependCur[1],-.5f,0, 0, -0.5f,dependNext[0], dependNext[1], -.5f);
 		       	}
-		      
-		      //  this.addTriangle(cur[0],cur[1],cur_z,next[0],next[1],cur_z,cur[0],cur[1],cur_z + increment_z);
-		     //   this.addTriangle(next[0],next[1],cur_z,next[0],next[1],cur_z + increment_z,cur[0],cur[1],cur_z + increment_z);
-		      	
-
 		       	
+		        makeSquareTriangle(increment_z, cur_z, cur, next,
+		        		dependCur, dependNext);
+		     
 	       }	
 	       cur_z = cur_z  + increment_z;
 	       oldPoints = pointsTop;
 	       cur_rad = cur_rad - increment_rad;
        }
     }
+
+	private void makeSquareTriangle(float increment_z, float cur_z,
+			float[] cur, float[] next, float[] oldCur, float[] oldNext) {
+		
+		//Use old values for points going up the cone
+		this.addTriangle(oldCur[0],oldCur[1],cur_z,oldNext[0],oldNext[1],cur_z,cur[0],cur[1],cur_z + increment_z);
+		this.addTriangle(oldNext[0],oldNext[1],cur_z,next[0],next[1],cur_z + increment_z,cur[0],cur[1],cur_z + increment_z);
+	}
 
     /**
      * makeSphere - Create sphere of a given radius, centered at the origin,

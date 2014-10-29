@@ -15,15 +15,17 @@ import javax.media.opengl.*;
 import javax.media.opengl.awt.GLCanvas;
 
 import java.io.*;
-
-
+import java.util.ArrayList;
+import java.lang.Math;
 public class cgShape extends simpleShape
 {
+
     /**
      * constructor
      */
     public cgShape()
     {
+
     	System.out.println("Oh god not java again!");
     }
 
@@ -42,7 +44,19 @@ public class cgShape extends simpleShape
     	return ((1 - fraction) * start) + (fraction * end);
     }
     
-
+    /**
+     * 
+     * @param top_left -Top Left Vertex
+     * @param bottom_left - Bottom Left Vertex
+     * @param bottom_right - Bottom Right Vertex 
+     * @param top_right - Top Right Vertex
+     * @param front - Boolean If true the triangle will be drawn facing the camera
+     */
+    private void MakeSquare(float top_left,float bottom_left,float bottom_right,float top_right,boolean front)
+    {
+    	
+    }
+        
     /**
      * makeCube - Create a unit cube, centered at the origin, with a given
      * number of subdivisions in each direction on each face.
@@ -89,20 +103,22 @@ public class cgShape extends simpleShape
 		    		cur_x + triangle_increment , cur_y - triangle_increment, 0.5f
 		    		);
 
-//Back ?		    	
+	
 		    	//Draw top left
 		    	this.addTriangle(
 		    			cur_x, cur_y, -0.5f,
-		    			cur_x , cur_y - triangle_increment,-0.5f,
-		    			cur_x + triangle_increment, cur_y, -0.5f
+		    			cur_x + triangle_increment, cur_y, -0.5f,
+		    			cur_x , cur_y - triangle_increment,-0.5f
+		    
 		    			);
 		    	
 		    	
 		    	//Draw bottom right
 		    	this.addTriangle(
 		    		cur_x + triangle_increment, cur_y, -0.5f,
-		  			cur_x,cur_y - triangle_increment,-0.5f,
-		    		cur_x + triangle_increment , cur_y - triangle_increment, -0.5f
+		    		cur_x + triangle_increment , cur_y - triangle_increment, -0.5f,
+		  			cur_x,cur_y - triangle_increment,-0.5f
+		    		
 		    		);
 		   
 		    	//top 
@@ -130,23 +146,25 @@ public class cgShape extends simpleShape
 		    	//Draw top left
 		    	this.addTriangle(
 		    			.5f , cur_y, cur_z + triangle_increment,
-		    			.5f, cur_y, cur_z,
-		    			.5f , cur_y - triangle_increment,cur_z
+		    			.5f , cur_y - triangle_increment,cur_z,
+		    			.5f, cur_y, cur_z
+		    			
 		    			);
 		    	
 		    	
 		    	//Draw bottom right
 		    	this.addTriangle(
 		    			.5f, cur_y, cur_z + triangle_increment,
-		    			.5f,cur_y - triangle_increment,cur_z,
-		    			.5f, cur_y - triangle_increment, cur_z + triangle_increment
+		    			.5f, cur_y - triangle_increment, cur_z + triangle_increment,
+		    			.5f,cur_y - triangle_increment,cur_z
+		    			
 		    			
 		    			
 		    			
 		    		);
 		    	
 		    	
-		    	
+		    
 		    	//Draw top left
 		    	this.addTriangle(
 		    			-.5f , cur_y, cur_z + triangle_increment,
@@ -206,8 +224,9 @@ public class cgShape extends simpleShape
 		    	//Draw top left
 		    	this.addTriangle(
 		    			cur_x + triangle_increment ,- 0.5f, cur_z + triangle_increment,
-		    			cur_x, -0.5f, cur_z,
-		    			cur_x , -0.5f ,cur_z + triangle_increment
+		    			cur_x , -0.5f ,cur_z + triangle_increment,
+		    			cur_x, -0.5f, cur_z
+
 		    			
 		    			);
 		    	
@@ -215,29 +234,38 @@ public class cgShape extends simpleShape
 		    	//Draw bottom right
 		    	this.addTriangle(
 		    			cur_x + triangle_increment,-0.5f,cur_z + triangle_increment,
-		    			cur_x + triangle_increment ,-0.5f, cur_z ,
-		    		cur_x, -0.5f, cur_z
+		    			cur_x, -0.5f, cur_z,
+		    			cur_x + triangle_increment ,-0.5f, cur_z
+		    	
 
 		    		
 		    		);
-		    		
 		    	cur_z = cur_z  + triangle_increment;
 	 	    }
-	    	
 	    	cur_x = cur_x + triangle_increment;
 	    }
-	   
-	    
-	  //  this.addTriangle(.9f, .1f, .1f, .1f, .1f, .1f, 9f, 0, 1);
-        
-        //this.addTriangle(1,0 ,.5f,.5f, .5f, .5f, 0, 0, .5f);
-        //Foreach Subdivision?
-        	//Calculate bottom left
-        	//Calculate top right
-        	//Draw it.
-        // YOUR IMPLEMENTATION HERE
     }
     
+    //Takes in the radius of the circle and the angle. Of each segment
+    private ArrayList<float[]> pointOnCircle(float radius,float angle)
+    {
+    	ArrayList<float[]> return_val = new ArrayList<float[]>();
+    	
+        //Loop through 360 degrees starting at zero
+        for(double x= 0; x < 360; x += angle )
+        {
+        	float[] temp_arr = new float[2];
+        	double asRadians = Math.toRadians(x);
+        	
+        	//add array
+        	temp_arr[0] = (float) (radius * (Math.cos(asRadians)));
+        	temp_arr[1] = (float) (radius * (Math.sin(asRadians)));
+        	
+        	return_val.add(temp_arr);
+        }
+    	
+    	return return_val;
+    }
     /**
      * makeCylinder - Create polygons for a cylinder with unit height, centered
      * at the origin, with separate number of radial subdivisions and height
@@ -256,7 +284,54 @@ public class cgShape extends simpleShape
 
         if( heightDivisions < 1 )
             heightDivisions = 1;
+        
+        //Degrees between each line in the top and bottom of the cylinder
+        float degrees_between = (float) 360 / (float) radialDivisions;
+        float increment_z = (float) 1.0/ (float)heightDivisions;
+        
+        ArrayList<float[]> pointsTop = pointOnCircle(radius,degrees_between);
+        
+        
+        
+        //Build Top 
+        
+        //Loop through 360 degrees starting at zero
+        for(int x= 0; x < pointsTop.size(); x++ )
+        {
+        	float[] cur = pointsTop.get(x);
+        	float[] next = (x == pointsTop.size() - 1) ? pointsTop.get(0) : pointsTop.get(x + 1);
+        	
+        	//Top
+        	this.addTriangle(0, 0, 0.5f, cur[0],cur[1], .5f,next[0], next[1], .5f);
+        	
+        	
+            this.addTriangle(
+            		cur[0],cur[1] ,.5f,   
+            		next[0],next[1] , .5f - increment_z,
+            		next[0], next[1], .5f  );
+        	
+        	
+        	float cur_z = 0.5f;
+        	for(int h = 0; h < heightDivisions ; h++)
+        	{
 
+        			//Top
+        			this.addTriangle(cur[0], cur[1], cur_z,cur[0], cur[1], cur_z - increment_z  , next[0],next[1], cur_z - increment_z);
+
+            		this.addTriangle(cur[0], cur[1], cur_z,cur[0], cur[1], cur_z ,next[0],next[1], cur_z - increment_z );
+            		cur_z = cur_z -increment_z;
+        	}
+        	
+        	//this.addTriangle(cur[0], cur[1], -0.5f + increment_z,cur[0], cur[1],-0.5f  , next[0],next[1], -0.5f);
+        	
+        	//Draw the final bottom triangle
+        	
+        	
+        	//Bottom
+          	this.addTriangle(0, 0, -0.5f,next[0], next[1], -.5f,cur[0],cur[1],-.5f);
+        	
+        }
+        
         // YOUR IMPLEMENTATION HERE
     }
 
@@ -276,10 +351,50 @@ public class cgShape extends simpleShape
         if( radialDivisions < 3 )
             radialDivisions = 3;
 
-        if( heightDivisions < 1 )
+        //if( heightDivisions < 1 )
             heightDivisions = 1;
 
-        // YOUR IMPLEMENTATION HERE
+      //Degrees between each line in the top and bottom of the cylinder
+       float degrees_between = (float) 360 / (float) radialDivisions;
+       
+       float increment_z = (float) 1/ (float)heightDivisions;
+       
+       ArrayList<float[]> pointsTop = pointOnCircle(radius,degrees_between);
+       
+       
+       //Loop through 360 degrees starting at zero
+       for(int x= 0; x < pointsTop.size(); x++ )
+       {
+       	float[] cur = pointsTop.get(x);
+       	float[] next = (x == pointsTop.size() - 1) ? pointsTop.get(0) : pointsTop.get(x + 1);
+    	
+       	//Bottom
+         this.addTriangle(0, 0, -0.5f,cur[0],cur[1],-.5f,next[0], next[1], -.5f);
+         
+         
+         
+         
+         
+         
+         
+         float cur_z = -0.5f;
+       	 for(int h = 0;h < heightDivisions;h++)
+       	 {
+
+/* 			//Top
+ 			this.addTriangle(cur[0], cur[1], cur_z,cur[0], cur[1], cur_z + increment_z  , next[0],next[1], cur_z + increment_z);
+
+     		this.addTriangle(cur[0], cur[1], cur_z,cur[0], cur[1], cur_z ,next[0],next[1], cur_z + increment_z );*/
+       		 
+       		this.addTriangle(cur[0], cur[1], cur_z,cur[0], 1, cur_z + increment_z  , next[0],1, cur_z + increment_z);
+       		 
+       		 this.addTriangle(cur[0], cur[1], cur_z,cur[0], cur[1], cur_z ,next[0],1, cur_z + increment_z );
+       		 
+     		cur_z = cur_z + increment_z;
+       	 }
+         
+         
+       }
     }
 
     /**

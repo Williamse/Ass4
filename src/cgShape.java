@@ -351,49 +351,94 @@ public class cgShape extends simpleShape
         if( radialDivisions < 3 )
             radialDivisions = 3;
 
-        //if( heightDivisions < 1 )
+        if( heightDivisions < 1 )
             heightDivisions = 1;
 
       //Degrees between each line in the top and bottom of the cylinder
        float degrees_between = (float) 360 / (float) radialDivisions;
        
        float increment_z = (float) 1/ (float)heightDivisions;
+       float increment_rad = increment_z/(float)2;
        
-       ArrayList<float[]> pointsTop = pointOnCircle(radius,degrees_between);
+  
+       float cur_rad = 0.5f;
+       float cur_z  = -0.5f;
        
-       
-       //Loop through 360 degrees starting at zero
-       for(int x= 0; x < pointsTop.size(); x++ )
+       ArrayList<float[]> oldPoints = null;
+       ArrayList<float[]> pointsTop;
+       ArrayList<float[]> pointsTopFirst = null;
+       for(int hdiv = 0; hdiv < heightDivisions;hdiv++)
        {
-       	float[] cur = pointsTop.get(x);
-       	float[] next = (x == pointsTop.size() - 1) ? pointsTop.get(0) : pointsTop.get(x + 1);
-    	
-       	//Bottom
-         this.addTriangle(0, 0, -0.5f,cur[0],cur[1],-.5f,next[0], next[1], -.5f);
-         
-         
-         
-         
-         
-         
-         
-         float cur_z = -0.5f;
-       	 for(int h = 0;h < heightDivisions;h++)
-       	 {
+    	   //Special case for bottom of cone
+    	   if(hdiv ==0)
+    	   {
+    		   
+    		   pointsTopFirst = pointOnCircle(cur_rad,degrees_between );
+    	   }
+    	   pointsTop = pointOnCircle(cur_rad - increment_rad ,degrees_between);
+    	   
+	       //Loop through 360 degrees starting at zero
+    	   
+    	   
+	       for(int x= 0; x < pointsTop.size(); x++ )
+	       {
+	    	    
+		       	float[] cur = pointsTop.get(x);
+		       	float[] next = (x == pointsTop.size() - 1) ? pointsTop.get(0) : pointsTop.get(x + 1);
+		       	
+		       	if(hdiv != 0)
+		       	{
+			       	float[] oldCur;
+			       	float[] oldNext;
+			       	
+		       		oldCur  = oldPoints.get(x);
+		       		oldNext = (x == oldPoints.size() - 1) ? oldPoints.get(0) : oldPoints.get(x + 1);
+		       		
+		       		//Use old values for points going up the cone
+			        this.addTriangle(oldCur[0],oldCur[1],cur_z,oldNext[0],oldNext[1],cur_z,cur[0],cur[1],cur_z + increment_z);
+			        this.addTriangle(oldNext[0],oldNext[1],cur_z,next[0],next[1],cur_z + increment_z,cur[0],cur[1],cur_z + increment_z);
+			      	
+		       	}
+		       	else
+		       	{
 
-/* 			//Top
- 			this.addTriangle(cur[0], cur[1], cur_z,cur[0], cur[1], cur_z + increment_z  , next[0],next[1], cur_z + increment_z);
+		       		//Special case bottom
+		       		float[] first_cur = pointsTopFirst.get(x); 
+		       		float[] first_next  =  (x == pointsTopFirst.size() - 1) ? pointsTopFirst.get(0) : pointsTopFirst.get(x + 1);
+		       		
+		       		//Bottom
+		       		this.addTriangle(first_cur[0],first_cur[1],-.5f,0, 0, -0.5f,first_next[0], first_next[1], -.5f);
+		       		
 
-     		this.addTriangle(cur[0], cur[1], cur_z,cur[0], cur[1], cur_z ,next[0],next[1], cur_z + increment_z );*/
-       		 
-       		this.addTriangle(cur[0], cur[1], cur_z,cur[0], 1, cur_z + increment_z  , next[0],1, cur_z + increment_z);
-       		 
-       		 this.addTriangle(cur[0], cur[1], cur_z,cur[0], cur[1], cur_z ,next[0],1, cur_z + increment_z );
-       		 
-     		cur_z = cur_z + increment_z;
-       	 }
-         
-         
+		       		//if(heightDivisions == 1)
+		       		//{
+				  //      this.addTriangle(cur[0],cur[1],cur_z,next[0],next[1],cur_z,0,0,0);
+				  //      this.addTriangle(next[0],next[1],cur_z,0,0,0,0,0,0);
+		       		//}
+		       	//	else
+		       	//	{
+		       		//	pointsTop.set(x,first_cur);
+		       		//	int next_index = (x == pointsTopFirst.size() - 1) ? 0 : x + 1;
+		       		//	pointsTop.set(next_index, first_next);
+		       			
+		       			//first_cur = cur;
+		       			//first_next  = next;
+		       			
+				        this.addTriangle(first_cur[0],first_cur[1],cur_z,first_next[0],first_next[1],cur_z,cur[0],cur[1],cur_z + increment_z);
+				        this.addTriangle(first_next[0],first_next[1],cur_z,next[0],next[1],cur_z + increment_z,cur[0],cur[1],cur_z + increment_z);
+		       		//}
+			      	
+		       	}
+		      
+		      //  this.addTriangle(cur[0],cur[1],cur_z,next[0],next[1],cur_z,cur[0],cur[1],cur_z + increment_z);
+		     //   this.addTriangle(next[0],next[1],cur_z,next[0],next[1],cur_z + increment_z,cur[0],cur[1],cur_z + increment_z);
+		      	
+
+		       	
+	       }	
+	       cur_z = cur_z  + increment_z;
+	       oldPoints = pointsTop;
+	       cur_rad = cur_rad - increment_rad;
        }
     }
 

@@ -413,12 +413,13 @@ public class cgShape extends simpleShape
        }
     }
 
+    
 	private void makeSquareTriangle(float increment_z, float cur_z,
-			float[] cur, float[] next, float[] oldCur, float[] oldNext) {
+			float[] TopLeft, float[] TopRight, float[] BottomLeft, float[] BottomRight) {
 		
 		//Use old values for points going up the cone
-		this.addTriangle(oldCur[0],oldCur[1],cur_z,oldNext[0],oldNext[1],cur_z,cur[0],cur[1],cur_z + increment_z);
-		this.addTriangle(oldNext[0],oldNext[1],cur_z,next[0],next[1],cur_z + increment_z,cur[0],cur[1],cur_z + increment_z);
+		this.addTriangle(BottomLeft[0],BottomLeft[1],cur_z,BottomRight[0],BottomRight[1],cur_z,TopLeft[0],TopLeft[1],cur_z + increment_z);
+		this.addTriangle(BottomRight[0],BottomRight[1],cur_z,TopRight[0],TopRight[1],cur_z + increment_z,TopLeft[0],TopLeft[1],cur_z + increment_z);
 	}
 
     /**
@@ -440,6 +441,19 @@ public class cgShape extends simpleShape
         if( stacks < 3 )
             stacks = 3;
 
+        float slice_increas = (float) 1 / (float)slices;
+        float stack_increase = (float) 1/ (float)stacks;
+        
+        //loop through stacks
+        		//First Stack exception
+        		//last stack exception
+        	//calculate circle
+        	//Use old and previous values to "Draw square"
+        	//Store new values as old values
+        	
+        
+        
+        
         // YOUR IMPLEMENTATION HERE
     }
 

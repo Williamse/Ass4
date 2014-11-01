@@ -25,23 +25,16 @@ public class cgShape extends simpleShape
      */
     public cgShape()
     {
-
-    	System.out.println("Oh god not java again!");
     }
 
     /**
-     * 
+     * Calculate change in z value for the cube
      * @param subdivisions - How many subdivisions in our cube
      * @return The amount to setp for each triangle
      */
     float GetCubeIncrement(int subdivisions )
     {
     	return (1.0f/(float)subdivisions);
-    }
-    
-    private float PointBetween(float start, float end, float fraction)
-    {
-    	return ((1 - fraction) * start) + (fraction * end);
     }
     
     /**
@@ -80,53 +73,10 @@ public class cgShape extends simpleShape
 	    float cur_z = -.5f;
 	    
 	    
-	    
-	    
-	    
 	   //FRONT AND BACK
 	    for(int cur_subdivision = 0; cur_subdivision < subdivisions;cur_subdivision++)
 	    {
-	    	cur_y= 0.5f;
-	    	for(int cur_sub_y =0; cur_sub_y < subdivisions;cur_sub_y++)
-	    	{
-      	    	//Draw top left
-		    	this.addTriangle(
-		    			cur_x, cur_y, 0.5f,
-		    			cur_x , cur_y - triangle_increment,0.5f,
-		    			cur_x + triangle_increment, cur_y, 0.5f
-		    			);
-		    	
-		    	//Draw bottom right
-		    	this.addTriangle(
-		    		cur_x + triangle_increment, cur_y, 0.5f,
-		  			cur_x,cur_y - triangle_increment,0.5f,
-		    		cur_x + triangle_increment , cur_y - triangle_increment, 0.5f
-		    		);
-
-	
-		    	//Draw top left
-		    	this.addTriangle(
-		    			cur_x, cur_y, -0.5f,
-		    			cur_x + triangle_increment, cur_y, -0.5f,
-		    			cur_x , cur_y - triangle_increment,-0.5f
-		    
-		    			);
-		    	
-		    	
-		    	//Draw bottom right
-		    	this.addTriangle(
-		    		cur_x + triangle_increment, cur_y, -0.5f,
-		    		cur_x + triangle_increment , cur_y - triangle_increment, -0.5f,
-		  			cur_x,cur_y - triangle_increment,-0.5f
-		    		
-		    		);
-		   
-		    	//top 
-		    	cur_y = cur_y - triangle_increment;
-	    	}
-
-	    	
-	    //	this.addTriangle(x0, y0, z0, x1, y1, z1, x2, y2, z2);
+	    	DrawFrontBack(subdivisions, triangle_increment, cur_x);
 	    	cur_x = cur_x + triangle_increment;
 	    }
 	  
@@ -139,57 +89,8 @@ public class cgShape extends simpleShape
 	    //left and right
 	    for(int cur_sub_z =0; cur_sub_z < subdivisions;cur_sub_z++)
 	    {
-	    	cur_y= 0.5f;
-	    	for(int cur_sub_y = 0; cur_sub_y < subdivisions;cur_sub_y++)
-	 	    {
-	    		
-		    	//Draw top left
-		    	this.addTriangle(
-		    			.5f , cur_y, cur_z + triangle_increment,
-		    			.5f , cur_y - triangle_increment,cur_z,
-		    			.5f, cur_y, cur_z
-		    			
-		    			);
-		    	
-		    	
-		    	//Draw bottom right
-		    	this.addTriangle(
-		    			.5f, cur_y, cur_z + triangle_increment,
-		    			.5f, cur_y - triangle_increment, cur_z + triangle_increment,
-		    			.5f,cur_y - triangle_increment,cur_z
-		    			
-		    			
-		    			
-		    			
-		    		);
-		    	
-		    	
-		    
-		    	//Draw top left
-		    	this.addTriangle(
-		    			-.5f , cur_y, cur_z + triangle_increment,
-		    			-.5f, cur_y, cur_z,
-		    			-.5f , cur_y - triangle_increment,cur_z
-		    			);
-		    	
-		    	
-		    	//Draw bottom right
-		    	this.addTriangle(
-		    			-.5f,cur_y - triangle_increment,cur_z,
-		    			-.5f, cur_y - triangle_increment, cur_z + triangle_increment,
-		    			-.5f, cur_y, cur_z + triangle_increment
-		    			
-		    			
-		    		);
-		    
-		    	
-		    	
-		    	
-		    	cur_y = cur_y - triangle_increment;
-	 	    }
-	    	
+	    	DrawLeftRight(subdivisions, triangle_increment, cur_z);
 	    	cur_z = cur_z + triangle_increment;
-    	
 	    }
 	    
 	     cur_x = -.5f;
@@ -200,51 +101,161 @@ public class cgShape extends simpleShape
 	    //top and bot
 	    for(int cur_sub_x =0; cur_sub_x < subdivisions;cur_sub_x++)
 	    {
-	    	 cur_z = -.5f;
-	    	for(int cur_sub_z = 0; cur_sub_z < subdivisions;cur_sub_z++)
-	 	    {
-		    	//Draw top left
-		    	this.addTriangle(
-		    			cur_x + triangle_increment , 0.5f, cur_z + triangle_increment,
-		    			cur_x, 0.5f, cur_z,
-		    			cur_x , 0.5f ,cur_z + triangle_increment
-		    			
-		    			);
-		    	
-		    	
-		    	//Draw bottom right
-		    	this.addTriangle(
-		    			cur_x + triangle_increment,0.5f,cur_z + triangle_increment,
-		    			cur_x + triangle_increment ,0.5f, cur_z ,
-		    		cur_x, 0.5f, cur_z
-
-		    		
-		    		);
-		    	
-		    	//Draw top left
-		    	this.addTriangle(
-		    			cur_x + triangle_increment ,- 0.5f, cur_z + triangle_increment,
-		    			cur_x , -0.5f ,cur_z + triangle_increment,
-		    			cur_x, -0.5f, cur_z
-
-		    			
-		    			);
-		    	
-		    	
-		    	//Draw bottom right
-		    	this.addTriangle(
-		    			cur_x + triangle_increment,-0.5f,cur_z + triangle_increment,
-		    			cur_x, -0.5f, cur_z,
-		    			cur_x + triangle_increment ,-0.5f, cur_z
-		    	
-
-		    		
-		    		);
-		    	cur_z = cur_z  + triangle_increment;
-	 	    }
+	    	 DrawTopBot(subdivisions, triangle_increment, cur_x);
 	    	cur_x = cur_x + triangle_increment;
 	    }
     }
+
+	/**
+	 * Draws the top and bottom of a cube
+	 * @param subdivisions
+	 * @param triangle_increment - Z axis change per stack
+	 * @param cur_x - Current x value
+	 */
+	private void DrawTopBot(int subdivisions, float triangle_increment,
+			float cur_x) {
+		float cur_z;
+		cur_z = -.5f;
+		for(int cur_sub_z = 0; cur_sub_z < subdivisions;cur_sub_z++)
+		{
+			//Draw top left
+			this.addTriangle(
+					cur_x + triangle_increment , 0.5f, cur_z + triangle_increment,
+					cur_x, 0.5f, cur_z,
+					cur_x , 0.5f ,cur_z + triangle_increment
+					
+					);
+			
+			
+			//Draw bottom right
+			this.addTriangle(
+					cur_x + triangle_increment,0.5f,cur_z + triangle_increment,
+					cur_x + triangle_increment ,0.5f, cur_z ,
+				cur_x, 0.5f, cur_z
+
+				
+				);
+			
+			//Draw top left
+			this.addTriangle(
+					cur_x + triangle_increment ,- 0.5f, cur_z + triangle_increment,
+					cur_x , -0.5f ,cur_z + triangle_increment,
+					cur_x, -0.5f, cur_z
+
+					
+					);
+			
+			
+			//Draw bottom right
+			this.addTriangle(
+					cur_x + triangle_increment,-0.5f,cur_z + triangle_increment,
+					cur_x, -0.5f, cur_z,
+					cur_x + triangle_increment ,-0.5f, cur_z
+			
+
+				
+				);
+			cur_z = cur_z  + triangle_increment;
+		}
+	}
+
+	/**
+	 * Draws the left and right sides of a cube
+	 * @param subdivisions
+	 * @param triangle_increment - Z axis change per stack
+	 * @param cur_z - Current z value
+	 */
+	private void DrawLeftRight(int subdivisions, float triangle_increment,
+			float cur_z) {
+		float cur_y;
+		cur_y= 0.5f;
+		for(int cur_sub_y = 0; cur_sub_y < subdivisions;cur_sub_y++)
+		{
+			
+			//Draw top left
+			this.addTriangle(
+					.5f , cur_y, cur_z + triangle_increment,
+					.5f , cur_y - triangle_increment,cur_z,
+					.5f, cur_y, cur_z
+					
+					);
+			
+			
+			//Draw bottom right
+			this.addTriangle(
+					.5f, cur_y, cur_z + triangle_increment,
+					.5f, cur_y - triangle_increment, cur_z + triangle_increment,
+					.5f,cur_y - triangle_increment,cur_z
+				);
+			
+			//Draw top left
+			this.addTriangle(
+					-.5f , cur_y, cur_z + triangle_increment,
+					-.5f, cur_y, cur_z,
+					-.5f , cur_y - triangle_increment,cur_z
+					);
+			
+			
+			//Draw bottom right
+			this.addTriangle(
+					-.5f,cur_y - triangle_increment,cur_z,
+					-.5f, cur_y - triangle_increment, cur_z + triangle_increment,
+					-.5f, cur_y, cur_z + triangle_increment
+					
+					
+				);
+			cur_y = cur_y - triangle_increment;
+		}
+	}
+
+	/**
+	 * Draws the front and back of a cube
+	 * @param subdivisions
+	 * @param triangle_increment - Z axis change per stack
+	 * @param cur_x - Current x value
+	 */
+	private void DrawFrontBack(int subdivisions, float triangle_increment,
+			float cur_x) {
+		float cur_y;
+		cur_y= 0.5f;
+		for(int cur_sub_y =0; cur_sub_y < subdivisions;cur_sub_y++)
+		{
+			//Draw top left
+			this.addTriangle(
+					cur_x, cur_y, 0.5f,
+					cur_x , cur_y - triangle_increment,0.5f,
+					cur_x + triangle_increment, cur_y, 0.5f
+					);
+			
+			//Draw bottom right
+			this.addTriangle(
+				cur_x + triangle_increment, cur_y, 0.5f,
+				cur_x,cur_y - triangle_increment,0.5f,
+				cur_x + triangle_increment , cur_y - triangle_increment, 0.5f
+				);
+
+
+			//Draw top left
+			this.addTriangle(
+					cur_x, cur_y, -0.5f,
+					cur_x + triangle_increment, cur_y, -0.5f,
+					cur_x , cur_y - triangle_increment,-0.5f
+		
+					);
+			
+			
+			//Draw bottom right
+			this.addTriangle(
+				cur_x + triangle_increment, cur_y, -0.5f,
+				cur_x + triangle_increment , cur_y - triangle_increment, -0.5f,
+				cur_x,cur_y - triangle_increment,-0.5f
+				
+				);
+   
+			//top 
+			cur_y = cur_y - triangle_increment;
+		}
+	}
     
     //Takes in the radius of the circle and the angle. Of each segment
     private ArrayList<float[]> pointOnCircle(float radius,float angle)
@@ -290,11 +301,7 @@ public class cgShape extends simpleShape
         float increment_z = (float) 1.0/ (float)heightDivisions;
         
         ArrayList<float[]> pointsTop = pointOnCircle(radius,degrees_between);
-        
-        
-        
-        //Build Top 
-        
+
         //Loop through 360 degrees starting at zero
         for(int x= 0; x < pointsTop.size(); x++ )
         {
@@ -321,18 +328,10 @@ public class cgShape extends simpleShape
             		this.addTriangle(cur[0], cur[1], cur_z,cur[0], cur[1], cur_z ,next[0],next[1], cur_z - increment_z );
             		cur_z = cur_z -increment_z;
         	}
-        	
-        	//this.addTriangle(cur[0], cur[1], -0.5f + increment_z,cur[0], cur[1],-0.5f  , next[0],next[1], -0.5f);
-        	
-        	//Draw the final bottom triangle
-        	
-        	
         	//Bottom
           	this.addTriangle(0, 0, -0.5f,next[0], next[1], -.5f,cur[0],cur[1],-.5f);
         	
         }
-        
-        // YOUR IMPLEMENTATION HERE
     }
 
     /**
@@ -414,9 +413,17 @@ public class cgShape extends simpleShape
 	       cur_rad = cur_rad - increment_rad;
        }
     }
-
     
-	private void makeSquareTriangle(float increment_z, float cur_z,
+    /**
+     * Makes a square comprised of triangles
+     * @param increment_z - Amount to change the z axis by from the bottom to the top
+     * @param cur_z - Current z value
+     * @param TopLeft - Float array of the form [xval,yval] for the top left vertacie 
+     * @param TopRight
+     * @param BottomLeft
+     * @param BottomRight
+     */
+   	private void makeSquareTriangle(float increment_z, float cur_z,
 			float[] TopLeft, float[] TopRight, float[] BottomLeft, float[] BottomRight) {
 		
 		//Use old values for points going up the cone
@@ -425,7 +432,15 @@ public class cgShape extends simpleShape
 	}
 
 	
-	
+	/**
+	 * Creates a square comprised of triangles for a sphere
+	 * @param old_z - Z value for the lower stack
+	 * @param cur_z - Z Value for the upper stack
+	 * @param TopLeft - Float array of the form [xval,yval] for the top left vertacie 
+	 * @param TopRight
+	 * @param BottomLeft
+	 * @param BottomRight
+	 */
 	private void makeSquareTriangleSphere(float old_z, float cur_z,
 			float[] TopLeft, float[] TopRight, float[] BottomLeft, float[] BottomRight) {
 		
@@ -433,11 +448,23 @@ public class cgShape extends simpleShape
 		this.addTriangle(BottomLeft[0],BottomLeft[1],cur_z,BottomRight[0],BottomRight[1],cur_z,TopLeft[0],TopLeft[1],old_z);
 		this.addTriangle(BottomRight[0],BottomRight[1],cur_z,TopRight[0],TopRight[1],old_z,TopLeft[0],TopLeft[1],old_z);
 	}
+	
+	/**
+	 * Uses trigonometry to calculate the current z axis value at a given stack in a sphere
+	 * @param cur_stack - The current stack we are at 
+	 * @param degrees_between_stacks - The degrees between each stack in the sphere
+	 * @return
+	 */
 	private float get_z(int cur_stack,float degrees_between_stacks)
 	{
 		return (float) (-0.5 * Math.cos(Math.toRadians(degrees_between_stacks * (float)cur_stack)));
 	}
-	
+	/**
+	 * Uses trigonometry to calculate the current radius value at a given stack in a sphere
+	 * @param cur_stack - The current stack we are at 
+	 * @param degrees_between_stacks - The degrees between each stack in the sphere
+	 * @return
+	 */
 	private float cur_rad(int cur_stack,float degrees_between_stacks)
 	{
 		
@@ -463,56 +490,64 @@ public class cgShape extends simpleShape
         if( stacks < 3 )
             stacks = 3;
         
-        
-        float degrees_between_z = (float) 180 / (float) stacks;
+        //Arraylists that hold the top(new values) and bottom (old values from the previous stack)
         ArrayList<float[]> points_top =  new ArrayList<float[]>();
         ArrayList<float[]> points_bottom = new ArrayList<float[]>();
-        float slice_increase = (float) 360 / (float)slices; //up
+        
+        //Degrees to increment
+        float degrees_between_z = (float) 180 / (float) stacks;
+        float slice_increase = (float) 360 / (float)slices; 
+        
+        //Used to calcualte change in z per stack
         float cur_z =   -0.5f;
         float old_z = -0.5f;
         
-        
-        
-        
+        //Start at the first stack
         for(int next_stack = 1; next_stack <= stacks;next_stack++ )
         {
+        	//Calculate radius at current point on sphere
         	float cur_rad = this.cur_rad(next_stack, degrees_between_z);
         	
-		    	//calculate the bottom
+		    	//at z = 0.5 or -0.5 we need to manually set the first or final array list of values to zero
 		    	if(next_stack  == 1)
 		    	{
-		    		points_bottom.clear();
-		    		for(int temp = 0; temp < slices;temp++)
-		    		{
-		    			points_bottom.add(new float[]{0,0});
-		    		}
+		    		SetPole(slices, points_bottom);
 		    	}
         		else if(next_stack == stacks)
             	{
-            		points_top.clear();
-            		for(int temp = 0; temp < slices;temp++)
-            		{
-            			points_top.add(new float[]{0,0});
-            		}
+            		SetPole(slices, points_top);
             	}
         	
-        	
+        	//If not final stack loop around sphere calculating values
         	if(next_stack != stacks)
-        	{
         		points_top = pointOnCircle(cur_rad,slice_increase );
-        	}
         	
         	cur_z =  (float)this.get_z(next_stack,degrees_between_z);
         	
+        	//Draw the triangles around the sphere
         	for(int sl = 0 ; sl < slices; sl++)
         	{
         			int next_index = (sl < slices - 1) ? (sl  + 1) : 0;
         			this.makeSquareTriangleSphere(cur_z,old_z, points_top.get(sl), points_top.get(next_index), points_bottom.get(sl), points_bottom.get(next_index));
         	}    
 
+        	//Update old z value becomes current. old points beomce the current points.
         	old_z = cur_z;
         	points_bottom = new ArrayList<float[]>(points_top);
         }
     }
+
+    /**
+     * Sets an array list to contain a list of float array initialized to [0,0]
+     * @param slices - Number of slices in the pole
+     * @param list  - list to populate with values 
+     */
+	private void SetPole(int slices, ArrayList<float[]> list) {
+		list.clear();
+		for(int temp = 0; temp < slices;temp++)
+		{
+			list.add(new float[]{0,0});
+		}
+	}
 
 }

@@ -405,6 +405,8 @@ public class cgShape extends simpleShape
 		       	
 		        makeSquareTriangle(increment_z, cur_z, cur, next,
 		        		dependCur, dependNext);
+		      //Bottom
+	       		this.addTriangle(dependCur[0],dependCur[1],-.5f,0, 0, -0.5f,dependNext[0], dependNext[1], -.5f);
 		     
 	       }	
 	       cur_z = cur_z  + increment_z;
@@ -422,6 +424,26 @@ public class cgShape extends simpleShape
 		this.addTriangle(BottomRight[0],BottomRight[1],cur_z,TopRight[0],TopRight[1],cur_z + increment_z,TopLeft[0],TopLeft[1],cur_z + increment_z);
 	}
 
+	
+	
+	private void makeSquareTriangleSphere(float old_z, float cur_z,
+			float[] TopLeft, float[] TopRight, float[] BottomLeft, float[] BottomRight) {
+		
+		//Use old values for points going up the cone
+		this.addTriangle(BottomLeft[0],BottomLeft[1],cur_z,BottomRight[0],BottomRight[1],cur_z,TopLeft[0],TopLeft[1],old_z);
+		this.addTriangle(BottomRight[0],BottomRight[1],cur_z,TopRight[0],TopRight[1],old_z,TopLeft[0],TopLeft[1],old_z);
+	}
+	private float get_z(int cur_stack,float degrees_between_stacks)
+	{
+		return (float) (-0.5 * Math.cos(Math.toRadians(degrees_between_stacks * (float)cur_stack)));
+	}
+	
+	private float cur_rad(int cur_stack,float degrees_between_stacks)
+	{
+		
+		return (float) (-0.5 * Math.sin(Math.toRadians(degrees_between_stacks * (float)cur_stack)));
+	}
+	
     /**
      * makeSphere - Create sphere of a given radius, centered at the origin,
      * using spherical coordinates with separate number of thetha and
@@ -437,24 +459,60 @@ public class cgShape extends simpleShape
     {
         if( slices < 3 )
             slices = 3;
-
+        
         if( stacks < 3 )
             stacks = 3;
-
-        float slice_increas = (float) 1 / (float)slices;
-        float stack_increase = (float) 1/ (float)stacks;
         
-        //loop through stacks
-        		//First Stack exception
-        		//last stack exception
-        	//calculate circle
-        	//Use old and previous values to "Draw square"
-        	//Store new values as old values
+        
+        float degrees_between_z = (float) 180 / (float) stacks;
+        ArrayList<float[]> points_top =  new ArrayList<float[]>();
+        ArrayList<float[]> points_bottom = new ArrayList<float[]>();
+        float slice_increase = (float) 360 / (float)slices; //up
+        float cur_z =   -0.5f;
+        float old_z = -0.5f;
+        
+        
+        
+        
+        for(int next_stack = 1; next_stack <= stacks;next_stack++ )
+        {
+        	float cur_rad = this.cur_rad(next_stack, degrees_between_z);
         	
-        
-        
-        
-        // YOUR IMPLEMENTATION HERE
+		    	//calculate the bottom
+		    	if(next_stack  == 1)
+		    	{
+		    		points_bottom.clear();
+		    		for(int temp = 0; temp < slices;temp++)
+		    		{
+		    			points_bottom.add(new float[]{0,0});
+		    		}
+		    	}
+        		else if(next_stack == stacks)
+            	{
+            		points_top.clear();
+            		for(int temp = 0; temp < slices;temp++)
+            		{
+            			points_top.add(new float[]{0,0});
+            		}
+            	}
+        	
+        	
+        	if(next_stack != stacks)
+        	{
+        		points_top = pointOnCircle(cur_rad,slice_increase );
+        	}
+        	
+        	cur_z =  (float)this.get_z(next_stack,degrees_between_z);
+        	
+        	for(int sl = 0 ; sl < slices; sl++)
+        	{
+        			int next_index = (sl < slices - 1) ? (sl  + 1) : 0;
+        			this.makeSquareTriangleSphere(cur_z,old_z, points_top.get(sl), points_top.get(next_index), points_bottom.get(sl), points_bottom.get(next_index));
+        	}    
+
+        	old_z = cur_z;
+        	points_bottom = new ArrayList<float[]>(points_top);
+        }
     }
 
 }
